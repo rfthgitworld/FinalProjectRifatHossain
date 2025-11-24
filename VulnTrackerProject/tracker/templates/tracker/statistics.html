@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="mb-4">Vulnerability Trend Analysis</h1>
+    <p class="text-muted">Analyzing the severity distribution of all vulnerabilities currently in the local database.</p>
+    
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">CVE Severity Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="severityChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">Key Metrics</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for label, count in severity_data|zip:severity_labels %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="severity-pill severity-{{ label }}">{{ label }}</span>
+                            <span class="badge bg-dark rounded-pill">{{ count }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+<script>
+    const severityLabels = JSON.parse('{{ severity_labels|safe }}');
+    const severityData = JSON.parse('{{ severity_data|safe }}');
+    
+    // Define colors for each severity level
+    const colors = {
+        'CRITICAL': '#dc3545',
+        'HIGH': '#fd7e14',
+        'MEDIUM': '#ffc107',
+        'LOW': '#198754',
+        'UNKNOWN': '#6c757d',
+    };
+    
+    // Map data labels to colors
+    const backgroundColors = severityLabels.map(label => colors[label] || '#6c757d');
+
+    const ctx = document.getElementById('severityChart').getContext('2d');
+    const severityChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: severityLabels,
+            datasets: [{
+                label: 'Severity Count',
+                data: severityData,
+                backgroundColor: backgroundColors,
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Severity Distribution of Tracked CVEs'
+                }
+            }
+        }
+    });
+</script>
+
+{% endblock %}

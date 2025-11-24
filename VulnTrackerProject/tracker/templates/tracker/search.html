@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="mb-4">Search Vulnerabilities</h1>
+    
+    <form method="get" action="{% url 'search' %}" class="mb-5">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control form-control-lg" placeholder="Search by Product, Vendor, or Keyword (e.g., apache, Cisco, RCE)" value="{{ search_query }}">
+            <button class="btn btn-primary" type="submit">Search NVD</button>
+        </div>
+    </form>
+
+    {% if search_query and vulnerabilities %}
+        <h2 class="mb-3">Search Results for "{{ search_query }}"</h2>
+        {% include "tracker/vulnerability_list.html" with vulnerabilities=vulnerabilities %}
+    {% elif search_query and not vulnerabilities %}
+        <div class="alert alert-warning">No vulnerabilities found matching your search term.</div>
+    {% elif not search_query %}
+        <div class="alert alert-info">Enter a keyword to search the National Vulnerability Database (NVD).</div>
+    {% endif %}
+{% endblock %}
