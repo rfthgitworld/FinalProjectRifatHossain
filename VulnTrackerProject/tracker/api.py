@@ -1,37 +1,39 @@
 import requests
 from django.conf import settings
 from datetime import datetime, timedelta
+from django.utils import timezone  # <--- NEW IMPORT
 
 NVD_API_BASE_URL = "https://services.nvd.nist.gov/rest/json/cves/2.0"
 
 
 def fetch_recent_vulnerabilities(days=30, keyword=None):
     """
-    Fetches vulnerabilities published in the last 'days' or by a keyword.
-
-    The NVD API uses 'lastModStartDate' and 'lastModEndDate' for filtering.
-    For simplicity here, we'll use a fixed time window.
+    Fetches vulnerabilities. Always uses the 'days' parameter to calculate
+    the publication date range for filtering.
     """
+
+    # 1. Calculate the required date range (using the 'days' argument)
     end_date = datetime.utcnow()
     start_date = end_date - timedelta(days=days)
 
+    # 2. Set base parameters: ALWAYS include the date range
     params = {
-        'pubStartDate': start_date.isoformat() + 'Z',
-        'pubEndDate': end_date.isoformat() + 'Z',
-        'resultsPerPage': 50  # Default
+        'resultsPerPage': 50,
+        'pubStartDate': start_date.isoformat() + 'Z',  # Now included unconditionally
+        'pubEndDate': end_date.isoformat() + 'Z'  # Now included unconditionally
     }
 
+    # 3. Add keyword filter if present
     if keyword:
-        # NVD API search requires exact matches for some fields,
-        # so using the 'keywordSearch' is the most flexible approach.
-        params['keywordSearch'] = keyword
+        params['keywordSearch'] = keyword  # Included alongside the date filters
 
     headers = {}
     if settings.NVD_API_KEY:
         headers['apiKey'] = settings.NVD_API_KEY
 
     try:
-        response = requests.get(NVD_API_BASE_URL, params=params, headers=headers, timeout=10)
+        # Added a 15-second timeout for robustness
+        response = requests.get(NVD_API_BASE_URL, params=params, headers=headers, timeout=15)
         response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
         data = response.json()
 
@@ -66,9 +68,13 @@ def fetch_recent_vulnerabilities(days=30, keyword=None):
                 # Extract published date
                 published_date = cve.get('published')
                 if published_date:
-                    published_date = datetime.fromisoformat(published_date.replace('Z', '+00:00'))
+                    # 1. Create a naive datetime object
+                    dt_obj = datetime.fromisoformat(published_date.replace('Z', '+00:00'))
 
-                if published_date:  # Only include if we have a published date
+                    # 2. FIX: Make the datetime object time-zone aware (assuming UTC from NVD's 'Z')
+                    published_date = timezone.make_aware(dt_obj)  # <--- FIX
+
+                if published_date:
                     vulnerabilities.append({
                         'cve_id': cve['id'],
                         'description': description,

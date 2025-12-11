@@ -73,7 +73,10 @@ def search_page(request):
 
     if query:
         # Fetch from API
-        api_results = fetch_recent_vulnerabilities(days=365, keyword=query)
+        api_results = fetch_recent_vulnerabilities(days=120, keyword=query)
+
+        # TEMPORARY DIAGNOSTIC LINE
+        print(f"API returned {len(api_results)} vulnerabilities for '{query}'.")
 
         # Sync and prepare for display
         for data in api_results:
