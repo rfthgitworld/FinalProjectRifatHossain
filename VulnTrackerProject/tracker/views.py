@@ -32,7 +32,7 @@ def sync_vulnerability(vuln_data):
 
 def home_page(request):
     """Home Page – Displays the latest vulnerabilities."""
-    recent_vulns_data = fetch_recent_vulnerabilities(days=7)
+    recent_vulns_data = fetch_recent_vulnerabilities(days=10)
 
     # Sync and get local objects for watchlist checking
     vulnerabilities = []
