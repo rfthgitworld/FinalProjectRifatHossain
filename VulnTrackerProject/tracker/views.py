@@ -184,3 +184,22 @@ def statistics_page(request):
         'page_title': 'Vulnerability Statistics'
     }
     return render(request, 'tracker/statistics.html', context)
+
+# --- Vul Detail View ---
+def vulnerability_detail(request, cve_id):
+    """Displays the full details of a single vulnerability."""
+
+    # Fetch the vulnerability from the local database
+    vulnerability = get_object_or_404(Vulnerability, cve_id=cve_id)
+
+    # Check if the vulnerability is on the user's watchlist
+    is_watched = False
+    if request.user.is_authenticated:
+        is_watched = WatchlistItem.objects.filter(user=request.user, vulnerability=vulnerability).exists()
+
+    context = {
+        'vulnerability': vulnerability,
+        'is_watched': is_watched,
+        'page_title': vulnerability.cve_id
+    }
+    return render(request, 'tracker/vulnerability_detail.html', context)

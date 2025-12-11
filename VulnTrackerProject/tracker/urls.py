@@ -14,4 +14,7 @@ urlpatterns = [
 
     # Actions
     path('watchlist/toggle/<str:cve_id>/', views.toggle_watchlist, name='toggle_watchlist'),
+
+    # NEW: Detail Page for a single vulnerability
+    path('vulnerability/<str:cve_id>/', views.vulnerability_detail, name='vulnerability_detail'),
 ]
