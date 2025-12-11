@@ -7,7 +7,7 @@ from django.contrib import messages
 from .api import fetch_recent_vulnerabilities
 from .models import Vulnerability, WatchlistItem
 from .forms import CustomUserCreationForm
-
+import json
 
 # --- Helper Functions ---
 
@@ -165,13 +165,19 @@ def statistics_page(request):
         'severity'
     ).annotate(count=Count('severity')).order_by('-count')
 
-    # Prepare data for Chart.js
-    severity_labels = [item['severity'] for item in severity_distribution]
-    severity_data = [item['count'] for item in severity_distribution]
+    # Prepare Python lists for the Django template filter (Key Metrics)
+    severity_labels_list = [item['severity'] for item in severity_distribution]  # NEW LIST NAME
+    severity_data_list = [item['count'] for item in severity_distribution]  # NEW LIST NAME
 
     context = {
-        'severity_labels': severity_labels,
-        'severity_data': severity_data,
+        # 1. JSON string version for Chart.js (needs to remain a JSON string)
+        'severity_labels_json': json.dumps(severity_labels_list),  # Send JSON to Chart.js
+        'severity_data_json': json.dumps(severity_data_list),  # Send JSON to Chart.js
+
+        # 2. Python list version for the Django template (Key Metrics card)
+        'severity_labels': severity_labels_list,  # Send Python list to zip_lists
+        'severity_data': severity_data_list,  # Send Python list to zip_lists
+
         'page_title': 'Vulnerability Statistics'
     }
     return render(request, 'tracker/statistics.html', context)

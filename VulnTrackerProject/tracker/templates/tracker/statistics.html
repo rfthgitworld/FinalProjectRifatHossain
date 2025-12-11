@@ -38,8 +38,8 @@
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
 <script>
-    const severityLabels = JSON.parse('{{ severity_labels|safe }}');
-    const severityData = JSON.parse('{{ severity_data|safe }}');
+    const severityLabels = JSON.parse('{{ severity_labels_json|safe }}');
+    const severityData = JSON.parse('{{ severity_data_json|safe }}');
     
     // Define colors for each severity level
     const colors = {
