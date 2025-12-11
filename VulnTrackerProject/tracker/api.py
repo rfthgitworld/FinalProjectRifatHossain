@@ -31,7 +31,7 @@ def fetch_recent_vulnerabilities(days=30, keyword=None):
         headers['apiKey'] = settings.NVD_API_KEY
 
     try:
-        response = requests.get(NVD_API_BASE_URL, params=params, headers=headers)
+        response = requests.get(NVD_API_BASE_URL, params=params, headers=headers, timeout=10)
         response.raise_for_status()  # Raise HTTPError for bad responses (4xx or 5xx)
         data = response.json()
 
