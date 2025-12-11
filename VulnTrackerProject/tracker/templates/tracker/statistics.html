@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load tracker_tags %}
 
 {% block content %}
     <h1 class="mb-4">Vulnerability Trend Analysis</h1>
@@ -21,7 +22,7 @@
                     <h5 class="mb-0">Key Metrics</h5>
                 </div>
                 <ul class="list-group list-group-flush">
-                    {% for label, count in severity_data|zip:severity_labels %}
+                    {% for label, count in severity_data|zip_lists:severity_labels %}
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <span class="severity-pill severity-{{ label }}">{{ label }}</span>
                             <span class="badge bg-dark rounded-pill">{{ count }}</span>
