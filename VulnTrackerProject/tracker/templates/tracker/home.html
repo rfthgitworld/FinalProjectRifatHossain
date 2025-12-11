@@ -9,7 +9,10 @@
                 <div class="col-md-6 mb-4">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <h5 class="card-title">{{ vuln.cve_id }} 
+                            <h5 class="card-title">
+                                <a href="{% url 'vulnerability_detail' vuln.cve_id %}">  {# <--- FIX APPLIED HERE: Added the link #}
+                                    {{ vuln.cve_id }}
+                                </a>
                                 <span class="severity-pill severity-{{ vuln.severity }}">
                                     {{ vuln.severity }}
                                 </span>
