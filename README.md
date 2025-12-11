@@ -64,3 +64,42 @@ Before running the application, you must initialize the database and create an a
    ```
     python manage.py createsuperuser
    ```
+   
+### Program Execution
+
+Once the database is initialized, you can start the development server
+
+1. **Run the Django Development Server:** Ensure you are in the VulnTrackerProject/ directory.
+
+    ```
+    python manage.py runserver
+    ```
+
+2. **Access the Application:** 
+   1. Open your web browser and navigate to the local server address: `http://127.0.0.1:8000/`
+   2. To access the admin dashboard: `http://127.0.0.1:8000/admin/` and log in with the superuser credentials you created earlier.
+
+You can now register a new user or log in with your superuser credentials to begin tracking vulnerabilities.
+
+***
+
+## Authors
+
+Rifat Hossain
+
+***
+
+## Version History
+
+* 0.1
+    * Initial Release
+
+***
+
+## Acknowledgments
+
+* [Django Documentation](https://docs.djangoproject.com/en/5.2/)
+* [Django Tutorial](https://www.w3schools.com/django/index.php)
+* [Bootstrap 5 (CSS framework for styling)](https://getbootstrap.com/)
+* [SQLite (Database)](https://www.sqlite.org/index.html)
+* [Google Gemini](https://gemini.google.com/share/40f29992bf64)
