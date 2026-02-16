@@ -1,11 +1,4 @@
-### INF601 - Advanced Programming in Python
-### Rifat Hossain   
-### Final Project
- 
-***
-
-
-# Vulnerability Tracker (Django Application)
+# Vulnerability Tracker (A Django Application)
 
 ## Description
 
@@ -102,4 +95,3 @@ Rifat Hossain
 * [Django Tutorial](https://www.w3schools.com/django/index.php)
 * [Bootstrap 5 (CSS framework for styling)](https://getbootstrap.com/)
 * [SQLite (Database)](https://www.sqlite.org/index.html)
-* [Google Gemini](https://gemini.google.com/share/40f29992bf64)
